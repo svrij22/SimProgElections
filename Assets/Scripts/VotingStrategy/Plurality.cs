@@ -10,7 +10,7 @@ namespace Assets.Scripts.VotingStrategy
 {
     public class Plurality : IVotingStrategy
     {
-        public void RunVotes()
+        public override void RunVotes()
         {
             //Results
             Dictionary<VoterScript, PartyScript> votes = new Dictionary<VoterScript, PartyScript>();
@@ -77,7 +77,7 @@ namespace Assets.Scripts.VotingStrategy
 
         }
 
-        public List<PartyScript> GetRankedForVoter(VoterScript voter)
+        public override List<PartyScript> GetRankedForVoter(VoterScript voter)
         {
             //Get nearest party
             List<PartyScript> Ranked = new(PartyGenerator.Instance.AllParties);
@@ -89,7 +89,7 @@ namespace Assets.Scripts.VotingStrategy
 
             return Ranked;
         }
-        public PartyScript ChooseParty(List<PartyScript> ranked)
+        public override PartyScript ChooseParty(List<PartyScript> ranked)
         {
             return ranked.First();
         }
