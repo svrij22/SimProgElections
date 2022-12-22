@@ -9,6 +9,6 @@ namespace Assets.Scripts.Settings
 {
     internal class SimSettings
     {
-        public static Plurality VotingStrategy = new();
+        public static IVotingStrategy VotingStrategy = new Plurality();
     }
 }

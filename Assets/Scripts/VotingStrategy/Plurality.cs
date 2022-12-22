@@ -8,10 +8,9 @@ using UnityEngine;
 
 namespace Assets.Scripts.VotingStrategy
 {
-    internal class Plurality
+    public class Plurality : IVotingStrategy
     {
-        public bool AdjustForSpoilerEffect { get; set; }
-        internal void RunVotes()
+        public void RunVotes()
         {
             //Results
             Dictionary<VoterScript, PartyScript> votes = new Dictionary<VoterScript, PartyScript>();
