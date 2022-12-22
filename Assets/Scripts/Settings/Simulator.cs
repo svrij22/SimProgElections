@@ -19,29 +19,13 @@ namespace Assets.Scripts.Settings
         /// Check if everyone has voted
         /// </summary>
         /// <returns></returns>
-        public bool EveryoneHasVoted()
+        public bool AtleastOneHasVoted()
         {
             foreach (var v in VoterGenerator.Instance.AllVoters)
-                if (v.VotedParty == Parties.None)
-                    return false;
+                if (v.VotedParty != Parties.None)
+                    return true;
 
-            return true;
-        }
-
-        /// <summary>
-        /// Gets ranked votes
-        /// </summary>
-        /// <returns></returns>
-        public Dictionary<Parties, int> GetRankings()
-        {
-            Dictionary<Parties, int> nDict = new();
-            VoterGenerator.Instance.AllVoters.ForEach(v =>
-            {
-                if (nDict.ContainsKey(v.VotedParty))
-                    nDict.Add(v.VotedParty, 0);
-                nDict[v.VotedParty] += 1;
-            });
-            return nDict;
+            return false;
         }
 
         /// <summary>
@@ -51,9 +35,9 @@ namespace Assets.Scripts.Settings
         public string GetResultsAsString()
         {
             var str = "";
-            GetRankings().ToList().ForEach(kv =>
+            VotingStrategy.GetRankedParties().ToList().ForEach(kv =>
             {
-                str += $"{kv.Key} = {kv.Value}, ";
+                str += $"{kv.Key.PartyColour} = {kv.Value}, ";
             });
             return str;
         }

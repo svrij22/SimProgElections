@@ -32,6 +32,7 @@ public class UserAgent : MonoBehaviour
 
     public void OnSpoilerEffBoolChange(bool val)
     {
+        Simulator.VotingStrategy.IsFinished = false;
         Simulator.VotingStrategy.AdjustForSpoilerEffect = val;
         Simulator.VotingStrategy.RunVotes();
         UpdateStateText();
@@ -54,7 +55,6 @@ public class UserAgent : MonoBehaviour
     }
     public void Vote()
     {
-        Simulator.VotingStrategy.IsFinished = false;
         Simulator.VotingStrategy.RunVotes();
         UpdateStateText();
     }
@@ -67,15 +67,15 @@ public class UserAgent : MonoBehaviour
     public void UpdateStateText()
     {
         var state = string.Empty;
-        var everyoneHasVoted = Simulator.EveryoneHasVoted();
+        var atleastOneHasVoted = Simulator.AtleastOneHasVoted();
         var isFinished = Simulator.VotingStrategy.IsFinished;
 
         //Has everyone voted?
-        if (!everyoneHasVoted && !isFinished)
+        if (!atleastOneHasVoted && !isFinished)
             state = "Voting is not finished.";
-        if (!everyoneHasVoted && isFinished)
+        if (!atleastOneHasVoted && isFinished)
             state = "Not everyone has voted.";
-        if (everyoneHasVoted && isFinished)
+        if (atleastOneHasVoted && isFinished)
             state = Simulator.GetResultsAsString();
 
         //Update text
@@ -98,10 +98,10 @@ public class UserAgent : MonoBehaviour
             if (Simulator.VotingStrategy.GetType() == typeof(Plurality))
             {
                 SpoilerEffectBtn.SetActive(false);
-                Simulator.VotingStrategy = new InstantRunOff(); 
+                Simulator.VotingStrategy = new Approval(); 
                 break;
             }
-            if (Simulator.VotingStrategy.GetType() == typeof(InstantRunOff))
+            if (Simulator.VotingStrategy.GetType() == typeof(Approval))
             {
                 SpoilerEffectBtn.SetActive(true);
                 Simulator.VotingStrategy = new Plurality(); 

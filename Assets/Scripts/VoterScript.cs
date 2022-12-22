@@ -14,8 +14,11 @@ public class VoterScript : MonoBehaviour
 
     }
     public Parties VotedParty { get; set; } = Parties.None;
-    public void VoteForParty(Parties color)
+    public void SetColor(Parties color)
     {
+        //Set voted party
+        VotedParty = color;
+
         //Update colour
         Body.GetComponent<BodyScript>()
             .UpdateColour(color);

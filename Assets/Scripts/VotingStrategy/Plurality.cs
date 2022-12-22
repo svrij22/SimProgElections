@@ -12,46 +12,45 @@ namespace Assets.Scripts.VotingStrategy
     {
         public override void RunVotes()
         {
-            //Results
-            Dictionary<VoterScript, PartyScript> votes = new Dictionary<VoterScript, PartyScript>();
+            //Return if voting is already finished
+            if (IsFinished) return;
+
+            //Initialize list
+            VoteResults = new();
+            PartyGenerator.Instance.AllParties.ForEach(p =>
+            {
+                VoteResults.Add(p, new());
+            });
 
             //For each voter, rank
             VoterGenerator.Instance.AllVoters.ForEach(v =>
             {
-
                 //Get ranked votes
                 var rankedVotes = GetRankedForVoter(v);
 
-                //Choose party
-                var party = ChooseParty(rankedVotes);
+                //Choose first party
+                var party = rankedVotes.First();
+
+                //Vote for party
+                v.SetColor(party.PartyColour);
 
                 //Add to dictionary
-                votes.Add(v, party);
+                VoteResults[party].Add(v);
             });
-
-            //Calculate 2 biggest parties
-            Dictionary<PartyScript, int> votesPerParty = new();
-
-            //Count votes
-            foreach (var item in votes)
-            {
-                //Create entry
-                if (!votesPerParty.ContainsKey(item.Value)) votesPerParty.Add(item.Value, 0);
-
-                //add value
-                votesPerParty[item.Value]++;
-            }
-
-            //Order by votes
-            var _2biggestParties = votesPerParty
-                .OrderBy(p => -p.Value)
-                .Select(p => p.Key)
-                .Take(2)
-                .ToList();
 
             //Spoiler effect?
             if (AdjustForSpoilerEffect)
             {
+
+                //Calculate 2 biggest parties
+                Dictionary<PartyScript, int> votesPerParty = GetRankedParties();
+
+                //Order by votes
+                var _2biggestParties = votesPerParty
+                    .OrderBy(p => -p.Value)
+                    .Select(p => p.Key)
+                    .Take(2)
+                    .ToList();
 
                 //Remove all votes that arent on the 2 biggest parties
                 VoterGenerator.Instance.AllVoters.ForEach(v =>
@@ -62,38 +61,12 @@ namespace Assets.Scripts.VotingStrategy
                             .ToList();
 
                     //vote
-                    v.VoteForParty(rankedVotes.First().PartyColour);
+                    v.SetColor(rankedVotes.First().PartyColour);
                 });
-            }
-            else
-            {
-                //Actual vote on best party
-                foreach (var item in votes)
-                {
-                    //Vote for party colour
-                    item.Key.VoteForParty(item.Value.PartyColour);
-                }
             }
 
             //Set is finished
             IsFinished = true;
-        }
-
-        public override List<PartyScript> GetRankedForVoter(VoterScript voter)
-        {
-            //Get nearest party
-            List<PartyScript> Ranked = new(PartyGenerator.Instance.AllParties);
-
-            //Rank all
-            Ranked = Ranked
-                .OrderBy(p => Vector3.Distance(voter.transform.position, p.transform.position))
-                .ToList();
-
-            return Ranked;
-        }
-        public override PartyScript ChooseParty(List<PartyScript> ranked)
-        {
-            return ranked.First();
         }
     }
 }
