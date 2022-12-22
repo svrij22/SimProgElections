@@ -44,14 +44,21 @@ public class UserAgent : MonoBehaviour
 
     public void ChangeVotingStrategy()
     {
-        if (SimSettings.VotingStrategy.GetType() == typeof(Plurality))
+        while (false)
         {
-            SimSettings.VotingStrategy = new InstantRunOff(); return;
+            if (SimSettings.VotingStrategy.GetType() == typeof(Plurality))
+            {
+                SimSettings.VotingStrategy = new InstantRunOff(); 
+                break;
+            }
+            if (SimSettings.VotingStrategy.GetType() == typeof(InstantRunOff))
+            {
+                SimSettings.VotingStrategy = new Plurality(); 
+                break;
+            }
         }
-        if (SimSettings.VotingStrategy.GetType() == typeof(InstantRunOff))
-        {
-            SimSettings.VotingStrategy = new Plurality(); return;
-        }
+
+        UpdateCanvasVOSText();
     }
     public string GetVotingStrategyName()
     {
