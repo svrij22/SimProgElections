@@ -66,8 +66,8 @@ public class UserAgent : MonoBehaviour
     }
     private void UpdateCanvasVOSText()
     {
-        VOSText.GetComponent<TextMeshPro>()
-            .text = GetVotingStrategyName();
+        VOSText.GetComponent<TextMeshProUGUI>()
+            .text = "Voting Strategy: " GetVotingStrategyName();
     }
 
     public void Vote()
