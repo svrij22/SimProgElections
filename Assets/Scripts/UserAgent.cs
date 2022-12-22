@@ -1,3 +1,4 @@
+using Assets.Scripts.Export;
 using Assets.Scripts.Settings;
 using Assets.Scripts.VotingStrategy;
 using System;
@@ -14,6 +15,9 @@ public class UserAgent : MonoBehaviour
     public static UserAgent Instance;
 
     public Simulator Simulator;
+
+    public Csv CsvF = new();
+
     void Start()
     {
         //Set singleton
@@ -24,6 +28,57 @@ public class UserAgent : MonoBehaviour
 
         //Update canvas text
         UpdateCanvasVOSText();
+
+        CsvF.WriteHeaders();
+
+    }
+
+    public int SimNo;
+
+    private int SimNoMax { get; set; } = 1000;
+
+    public int Step = 0;
+    void FixedUpdate()
+    {
+        if (SimNo > SimNoMax)
+            return;
+
+        //Unity export in steps
+        if (Step == 0)
+        {
+            VoterGenerator.Instance.GenerateVoters();
+            PartyGenerator.Instance.GenerateParties();
+        }
+        if (Step == 1)
+        {
+            Simulator.VotingStrategy.IsFinished = false;
+            Simulator.VotingStrategy.AdjustForSpoilerEffect = false;
+            Simulator.VotingStrategy.RunVotes();
+        }
+        if (Step == 2)
+        {
+            CsvF.Write(SimNo);
+        }
+        if (Step == 3)
+        {
+            Simulator.VotingStrategy.IsFinished = false;
+            Simulator.VotingStrategy.AdjustForSpoilerEffect = true;
+            Simulator.VotingStrategy.RunVotes();
+        }
+        if (Step == 4)
+        {
+            CsvF.Write(SimNo);
+        }
+        if (Step == 5)
+        {
+            SimNo++;
+            Step = -1;
+        }
+        if (SimNo > SimNoMax)
+        {
+            CsvF.Close();
+        }
+        Step++;
     }
 
     /// <summary>

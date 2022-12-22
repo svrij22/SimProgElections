@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,4 +23,14 @@ public class PartyScript : MonoBehaviour
             .UpdateColour(PartyColour);
     }
 
+    /// <summary>
+    /// Based of its position, gives a percentage on how extreme the party is from 0 to 100
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    internal double GetPartyPositionPercentage()
+    {
+        float pos = Math.Abs(transform.position.x) + Math.Abs(transform.position.z);
+        return Math.Round((pos / (14f)) * 100f);
+    }
 }

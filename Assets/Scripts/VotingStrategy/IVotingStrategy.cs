@@ -24,6 +24,7 @@ namespace Assets.Scripts.VotingStrategy
         {
             return VoteResults
                 .ToList()
+                .OrderBy(kv => -kv.Value.Count)
                 .ToDictionary(kv => kv.Key, kv => kv.Value.Count);
         }
 

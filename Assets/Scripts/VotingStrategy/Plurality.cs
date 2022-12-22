@@ -52,6 +52,13 @@ namespace Assets.Scripts.VotingStrategy
                     .Take(2)
                     .ToList();
 
+                //Re-Initialize list
+                VoteResults = new();
+                PartyGenerator.Instance.AllParties.ForEach(p =>
+                {
+                    VoteResults.Add(p, new());
+                });
+
                 //Remove all votes that arent on the 2 biggest parties
                 VoterGenerator.Instance.AllVoters.ForEach(v =>
                 {
@@ -61,6 +68,7 @@ namespace Assets.Scripts.VotingStrategy
                             .ToList();
 
                     //vote
+                    VoteResults[rankedVotes.First()].Add(v);
                     v.SetColor(rankedVotes.First().PartyColour);
                 });
             }

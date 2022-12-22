@@ -37,7 +37,7 @@ namespace Assets.Scripts.Settings
             var str = "";
             VotingStrategy.GetRankedParties().ToList().ForEach(kv =>
             {
-                str += $"{kv.Key.PartyColour} = {kv.Value}, ";
+                str += $"{kv.Key.PartyColour} = {kv.Value} - ";
             });
             return str;
         }
