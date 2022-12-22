@@ -7,14 +7,13 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Settings
 {
-    internal class Simulator
+    public class Simulator
     {
 
-        public static bool HasWinner = false;
-
-        public static PartyScript Winner = null;
-
-        public static IVotingStrategy VotingStrategy = new Plurality();
+        /// <summary>
+        /// Create voting strategy
+        /// </summary>
+        public IVotingStrategy VotingStrategy = new Plurality();
 
         /// <summary>
         /// Check if everyone has voted
@@ -43,6 +42,20 @@ namespace Assets.Scripts.Settings
                 nDict[v.VotedParty] += 1;
             });
             return nDict;
+        }
+
+        /// <summary>
+        /// Get rankings as string for UI
+        /// </summary>
+        /// <returns></returns>
+        public string GetResultsAsString()
+        {
+            var str = "";
+            GetRankings().ToList().ForEach(kv =>
+            {
+                str += $"{kv.Key} = {kv.Value}, ";
+            });
+            return str;
         }
     }
 }

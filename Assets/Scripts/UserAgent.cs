@@ -12,9 +12,17 @@ public class UserAgent : MonoBehaviour
     /// Singleton
     /// </summary>
     public static UserAgent Instance;
+
+    public Simulator Simulator;
     void Start()
     {
+        //Set singleton
         Instance = this;
+
+        //Create simulator
+        Simulator = new();
+
+        //Update canvas text
         UpdateCanvasVOSText();
     }
 
@@ -26,22 +34,29 @@ public class UserAgent : MonoBehaviour
     {
         Simulator.VotingStrategy.AdjustForSpoilerEffect = val;
         Simulator.VotingStrategy.RunVotes();
+        UpdateStateText();
     }
 
     public void RefreshVoters()
     {
+        Simulator.VotingStrategy.IsFinished = false;
         VoterGenerator.Instance.GenerateVoters();
         Simulator.VotingStrategy.RunVotes();
+        UpdateStateText();
     }
 
     public void RefreshParties()
     {
+        Simulator.VotingStrategy.IsFinished = false;
         PartyGenerator.Instance.GenerateParties();
         VoterGenerator.Instance.GenerateVoters();
+        UpdateStateText();
     }
     public void Vote()
     {
+        Simulator.VotingStrategy.IsFinished = false;
         Simulator.VotingStrategy.RunVotes();
+        UpdateStateText();
     }
 
     /// <summary>
@@ -51,10 +66,20 @@ public class UserAgent : MonoBehaviour
     public GameObject StateText;
     public void UpdateStateText()
     {
+        var state = string.Empty;
+        var everyoneHasVoted = Simulator.EveryoneHasVoted();
+        var isFinished = Simulator.VotingStrategy.IsFinished;
 
+        //Has everyone voted?
+        if (!everyoneHasVoted && !isFinished)
+            state = "Voting is not finished.";
+        if (!everyoneHasVoted && isFinished)
+            state = "Not everyone has voted.";
+        if (everyoneHasVoted && isFinished)
+            state = Simulator.GetResultsAsString();
 
         //Update text
-        VOSText.GetComponent<TextMeshProUGUI>()
+        StateText.GetComponent<TextMeshProUGUI>()
             .text = state;
     }
 

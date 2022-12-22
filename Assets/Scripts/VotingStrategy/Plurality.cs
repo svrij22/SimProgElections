@@ -75,6 +75,8 @@ namespace Assets.Scripts.VotingStrategy
                 }
             }
 
+            //Set is finished
+            IsFinished = true;
         }
 
         public override List<PartyScript> GetRankedForVoter(VoterScript voter)
