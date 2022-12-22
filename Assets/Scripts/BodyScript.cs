@@ -8,8 +8,8 @@ public class BodyScript : MonoBehaviour
 
     public GameObject Capsule;
 
-    public Colours CurrentColour = Colours.Gray;
-    public void UpdateColour(Colours color)
+    public Parties CurrentColour = Parties.Gray;
+    public void UpdateColour(Parties color)
     {
         //Return if updated
         if (CurrentColour == color) return;

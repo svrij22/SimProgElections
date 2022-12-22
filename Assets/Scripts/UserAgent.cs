@@ -12,8 +12,6 @@ public class UserAgent : MonoBehaviour
     /// Singleton
     /// </summary>
     public static UserAgent Instance;
-
-    public GameObject VOSText;
     void Start()
     {
         Instance = this;
@@ -26,14 +24,14 @@ public class UserAgent : MonoBehaviour
 
     public void OnSpoilerEffBoolChange(bool val)
     {
-        SimSettings.VotingStrategy.AdjustForSpoilerEffect = val;
-        SimSettings.VotingStrategy.RunVotes();
+        Simulator.VotingStrategy.AdjustForSpoilerEffect = val;
+        Simulator.VotingStrategy.RunVotes();
     }
 
     public void RefreshVoters()
     {
         VoterGenerator.Instance.GenerateVoters();
-        SimSettings.VotingStrategy.RunVotes();
+        Simulator.VotingStrategy.RunVotes();
     }
 
     public void RefreshParties()
@@ -41,19 +39,47 @@ public class UserAgent : MonoBehaviour
         PartyGenerator.Instance.GenerateParties();
         VoterGenerator.Instance.GenerateVoters();
     }
+    public void Vote()
+    {
+        Simulator.VotingStrategy.RunVotes();
+    }
 
+    /// <summary>
+    /// Winner Text Changing
+    /// </summary>
+    
+    public GameObject StateText;
+    public void UpdateStateText()
+    {
+
+
+        //Update text
+        VOSText.GetComponent<TextMeshProUGUI>()
+            .text = state;
+    }
+
+
+    /// <summary>
+    /// Voting Strat changing
+    /// </summary>
+
+    public GameObject VOSText;
+
+    public GameObject SpoilerEffectBtn;
     public void ChangeVotingStrategy()
     {
-        while (false)
+        while (true)
         {
-            if (SimSettings.VotingStrategy.GetType() == typeof(Plurality))
+            if (Simulator.VotingStrategy.GetType() == typeof(Plurality))
             {
-                SimSettings.VotingStrategy = new InstantRunOff(); 
+                SpoilerEffectBtn.SetActive(false);
+                Simulator.VotingStrategy = new InstantRunOff(); 
                 break;
             }
-            if (SimSettings.VotingStrategy.GetType() == typeof(InstantRunOff))
+            if (Simulator.VotingStrategy.GetType() == typeof(InstantRunOff))
             {
-                SimSettings.VotingStrategy = new Plurality(); 
+                SpoilerEffectBtn.SetActive(true);
+                Simulator.VotingStrategy = new Plurality(); 
                 break;
             }
         }
@@ -62,16 +88,11 @@ public class UserAgent : MonoBehaviour
     }
     public string GetVotingStrategyName()
     {
-        return SimSettings.VotingStrategy.GetType().Name;
+        return Simulator.VotingStrategy.GetType().Name;
     }
     private void UpdateCanvasVOSText()
     {
         VOSText.GetComponent<TextMeshProUGUI>()
-            .text = "Voting Strategy: " GetVotingStrategyName();
-    }
-
-    public void Vote()
-    {
-        SimSettings.VotingStrategy.RunVotes();
+            .text = "Voting Strategy: " + GetVotingStrategyName();
     }
 }

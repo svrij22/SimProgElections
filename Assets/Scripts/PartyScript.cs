@@ -8,7 +8,7 @@ public class PartyScript : MonoBehaviour
     /// <summary>
     /// Bindings
     /// </summary>
-    public Colours PartyColour = Colours.Green;
+    public Parties PartyColour = Parties.Green;
 
     public GameObject Body;
 

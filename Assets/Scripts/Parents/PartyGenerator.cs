@@ -60,7 +60,7 @@ public class PartyGenerator : MonoBehaviour
     public void GenerateParties()
     {
         ClearParties();
-        List<Colours> colourStack = new() { Colours.Blue, Colours.Yellow, Colours.Green, Colours.Yellow };
+        List<Parties> colourStack = new() { Parties.Blue, Parties.Yellow, Parties.Green, Parties.Yellow };
 
         //Create voters
         for (var i = 0; i < AmountOfParties; i++)
